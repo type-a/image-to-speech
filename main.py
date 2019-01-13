@@ -35,14 +35,29 @@ def detect_document(path):
                     #         symbol.text, symbol.confidence))
 
 
-def text2speech(text):
-    import pyttsx3
-    engine = pyttsx3.init()
-    engine.say(str(text))
-    engine.setProperty('rate',70)
-    engine.setProperty('volume',0.9) 
-    engine.runAndWait()
-    print("done ...")
+def text2mp3(text):
+    # import pyttsx3
+    # engine = pyttsx3.init()
+    # engine.say(str(text))
+    # engine.setProperty('rate',70)
+    # engine.setProperty('volume',0.9) 
+    # engine.runAndWait()
+    # print("done ...")
+    from google.cloud import texttospeech
+    client = texttospeech.TextToSpeechClient()
+    synthesis_input = texttospeech.types.SynthesisInput(text=text)
+    voice = texttospeech.types.VoiceSelectionParams(
+    language_code='en-US',
+    ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
+    audio_config = texttospeech.types.AudioConfig(
+    audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+    response = client.synthesize_speech(synthesis_input, voice, audio_config)
+    with open('output.mp3', 'wb') as out:
+    # Write the response to the output file.
+        out.write(response.audio_content)
+        print('Audio content written to file "output.mp3"')
+
+
 
 
 def englishonly(text):
@@ -59,10 +74,8 @@ def image2speech(image):
     sent = englishonly(detect_document(image))
     # return sent
     conv_sent = englishonly(sent)
-    text2speech(conv_sent)
+    text2mp3(conv_sent)
 
 
 
-image2speech("figure-66.jpg")
-
-
+image2speech("figure-68.jpeg")
