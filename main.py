@@ -1,5 +1,6 @@
 import io
 import os
+import subprocess
 
 def detect_document(path):
     """Detects document features in an image."""
@@ -36,13 +37,6 @@ def detect_document(path):
 
 
 def text2mp3(text):
-    # import pyttsx3
-    # engine = pyttsx3.init()
-    # engine.say(str(text))
-    # engine.setProperty('rate',70)
-    # engine.setProperty('volume',0.9) 
-    # engine.runAndWait()
-    # print("done ...")
     from google.cloud import texttospeech
     client = texttospeech.TextToSpeechClient()
     synthesis_input = texttospeech.types.SynthesisInput(text=text)
@@ -76,6 +70,8 @@ def image2speech(image):
     conv_sent = englishonly(sent)
     text2mp3(conv_sent)
 
-
+def music2speech(path):
+    subprocess.Popen(['omxplayer', path])
+    
 
 image2speech("figure-68.jpeg")
